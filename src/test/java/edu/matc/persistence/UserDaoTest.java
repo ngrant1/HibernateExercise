@@ -4,6 +4,7 @@ import edu.matc.entity.User;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -16,10 +17,12 @@ import static org.junit.Assert.*;
 public class UserDaoTest {
 
     UserDao dao;
+    int initialRecordAmount;
 
     @Before
     public void setup() {
         dao = new UserDao();
+        initialRecordAmount = dao.getAllUsers().size();
     }
 
     @Test
@@ -30,24 +33,38 @@ public class UserDaoTest {
 
     @Test
     public void getUser() throws Exception {
-    //TODO test the getUser Methods
+        User user = dao.getUser(1);
+        assertTrue(user.getUserid() == 1);
     }
 
     @Test
     public void addUser() throws Exception {
-    // TODO test the addUser Method
+        User user = new User();
+        user.setFirstName("Natasha");
+        user.setLastName("Grant");
+        user.setDateOfBirth(LocalDate.of(1992,10,16));
+       // user.setStatus("2");
+        int userid = dao.addUser(user);
+
+        assertTrue(user.getUserid() == 10);
     }
 
     @Test
     public void deleteUser() throws Exception {
-        //TODO test the delete
+        User user = dao.getUser(1);
+        dao.deleteUser(1);
+        List<User> users = dao.getAllUsers();
+
+        assertFalse(users.contains(user));
     }
 
     @Test
     public void updateUser() throws Exception {
-
-        //TODO test the update
-
+        User user = dao.getUser(5);
+        String name = "Grant";
+        user.setLastName(name);
+        dao.updateUser(user);
+        assertTrue(dao.getUser(5).getLastName().equals("Grant"));
     }
 
 }

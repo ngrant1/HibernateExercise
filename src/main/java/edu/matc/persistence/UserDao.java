@@ -2,7 +2,10 @@ package edu.matc.persistence;
 
 import edu.matc.entity.User;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -34,8 +37,19 @@ public class UserDao {
      * @return user
      */
     public User getUser(int id) {
-        //TODO return a user for the given id
-        return null;
+        User user = null;
+        Session session = null;
+        try {
+            session = SessionFactoryProvider.getSessionFactory().openSession();
+            user = (User) session.get(User.class, id);
+        } catch (HibernateException hibernateException) {
+            log.error("Error retrieving user with id: " + id, hibernateException);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return user;
     }
 
     /**
@@ -45,17 +59,55 @@ public class UserDao {
      * @return the id of the inserted record
      */
     public int addUser(User user) {
-        //TODO add the user and return the id of the inserted user
         int id = 0;
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = SessionFactoryProvider.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            id = (int) session.save(user);
+            transaction.commit();
+        } catch (HibernateException hibernateException1){
+            if (transaction != null) {
+                try {
+                    transaction.rollback();
+                } catch (HibernateException hibernateException2) {
+                    log.error("Error rolling back save of user: " + user, hibernateException2);
+                }
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
         return id;
     }
 
-    /**
-     * delete a user by id
-     * @param id the user's id
-     */
     public void deleteUser(int id) {
-        // TODO delete the user with the given id
+
+        User user = new User();
+        user.setUserid(id);
+
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = SessionFactoryProvider.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.delete(user);
+            transaction.commit();
+        } catch (HibernateException hibernateException1){
+            if (transaction != null) {
+                try {
+                    transaction.rollback();
+                } catch (HibernateException hibernateException2) {
+                    log.error("Error rolling back delete of user id: " + id, hibernateException2);
+                }
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
 
     }
 
@@ -65,8 +117,26 @@ public class UserDao {
      */
 
     public void updateUser(User user) {
-        // TODO update the user
-
+        Transaction transaction = null;
+        Session session = null;
+        try {
+            session = SessionFactoryProvider.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
+            session.saveOrUpdate(user);
+            transaction.commit();
+        } catch (HibernateException hibernateException1){
+            if (transaction != null) {
+                try {
+                    transaction.rollback();
+                } catch (HibernateException hibernateException2) {
+                    log.error("Error rolling back save of user: " + user, hibernateException2);
+                }
+            }
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 
 

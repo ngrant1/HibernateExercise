@@ -1,10 +1,10 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="HibernateWeek3Exercise:war exploded">
+  <artifact type="exploded-war" name="hibernateExercise:war exploded">
     <output-path>$PROJECT_DIR$/target/HibernateDemo</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="HibernateWeek3Exercise" />
+          <element id="module-output" name="hibernateExercise" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: javax:javaee-web-api:7.0" />
@@ -26,7 +26,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/HibernateDemo/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="HibernateWeek3Exercise/web/Web" />
+      <element id="javaee-facet-resources" facet="hibernateExercise/web/Web" />
     </root>
   </artifact>
 </component>
